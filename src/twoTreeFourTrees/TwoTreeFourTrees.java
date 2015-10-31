@@ -1,7 +1,7 @@
 package twoTreeFourTrees;
 
 public class TwoTreeFourTrees<T> {
-	private Node<T> root = new Node<T>();
+	private Node root = new Node();
 	
 
 	public void add(T data) {
@@ -34,5 +34,11 @@ public class TwoTreeFourTrees<T> {
 		 * Transfer the sibling's children to this node.
 		 * Once the sought value is reached, it can now be placed at the removed entry's location without a problem because we have ensured that the leaf node has more than 1 key.
 		 */
+	}
+	public Node getRoot() {
+		return root;
+	}
+	public void setRoot(Node root) {
+		this.root = root;
 	}
 }

@@ -1,7 +1,7 @@
 package twoTreeFourTrees;
 
 public class R {
-	public static final Integer ROOT = 1;
-	public static final Integer LEAF = 2;
-	public static final Integer INTERNAL = 3;
+	public static final int ROOT = 0b001;
+	public static final int LEAF = 0b010;
+	public static final int INTERNAL = 0b100;
 }
