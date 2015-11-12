@@ -2,9 +2,29 @@ package twoTreeFourTrees;
 
 public class TwoTreeFourTrees<T> {
 	private Node root = new Node();
+	private int height = 1;
 	
-
+	public TwoTreeFourTrees() {
+		super();
+		this.root.setStatus(Node.ROOT & Node.LEAF);
+	}
+	
 	public void add(T data) {
+		if (this.root.isElementsFull()) {
+			Integer tmp = this.root.getElements().get(1);
+			this.root.enlever(tmp);
+			
+			Node nouvelleFeuille = new Node();
+			nouvelleFeuille.ajouter(this.root.enlever(this.root.getElements().get(0)));
+			
+			if (this.root.getFather() == null) {
+				Node nouveauPere = new Node();
+				nouveauPere.ajouter(tmp);
+				nouveauPere.setStatus(Node.ROOT);
+				this.height++;
+			}
+		}
+		
 		/*
 		 * If the current node is a 4-node:
  		 * Remove and save the middle value to get a 3-node.

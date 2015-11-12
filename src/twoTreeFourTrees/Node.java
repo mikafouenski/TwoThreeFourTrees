@@ -1,37 +1,79 @@
 package twoTreeFourTrees;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Node {
-	private int status = R.LEAF;
-	private Node[] sons = new Node[4];
-	private int[] elements = new int[3];
+	public static final int ROOT = 0b001;
+	public static final int LEAF = 0b010;
+	public static final int INTERNAL = 0b100;
 	
-	public NodeshearchResult shearch(int data) {  // recursif
-		for (int i = 0; i < this.elements.length; i++) {
-			if (this.elements[i] == data) {
-				return new NodeshearchResult(this, i);
-			}
-			if (this.status != R.LEAF && this.elements[i] > data) {
-				return this.sons[i].shearch(data);
-			}
+	private int status = Node.LEAF;
+	private Node father = null;
+	private ArrayList<Node> sons = new ArrayList<Node>();
+	private ArrayList<Integer> elements = new ArrayList<Integer>();
+	
+	public boolean ajouter(Integer data) {
+		if (this.elements.size() <= 3) {
+			this.elements.add(data);
+			Collections.sort(this.elements);
+			return true;
+		} else return false;
+	}
+	
+	public Integer enlever(Integer data) {
+		Integer pos = rechercher(data);
+		if (pos != null) {
+			Integer tmp = this.elements.get(pos);
+			this.elements.remove(pos);
+			return tmp;
+		} else return null;
+	}
+	
+	public boolean isElementsEmpty() {
+		return (this.elements.size() == 0) ? true : false;
+	}
+	
+	public boolean isElementsFull() {
+		return (this.elements.size() == 3) ? true : false;
+	}
+	
+	public Integer rechercher(Integer data) {
+		for (int i = 0; i < this.elements.size(); i++) {
+			if (this.elements.get(i) == data ) return i;
 		}
 		return null;
 	}
-	public void addSon(Node son) {
-		
-	}
-	public void removeSon(Node son) {
-		
-	}
-	public void addElement(int data) {
-		
-	}
-	public void removeElement(int data) {
-		
-	}
+
 	public int getStatus() {
 		return status;
 	}
+
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public Node getFather() {
+		return father;
+	}
+
+	public void setFather(Node father) {
+		this.father = father;
+	}
+
+	public ArrayList<Node> getSons() {
+		return sons;
+	}
+
+	public void setSons(ArrayList<Node> sons) {
+		this.sons = sons;
+	}
+
+	public ArrayList<Integer> getElements() {
+		return elements;
+	}
+
+	public void setElements(ArrayList<Integer> elements) {
+		this.elements = elements;
 	}
 }
