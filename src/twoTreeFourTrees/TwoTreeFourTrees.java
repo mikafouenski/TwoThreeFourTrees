@@ -1,43 +1,66 @@
 package twoTreeFourTrees;
 
-public class TwoTreeFourTrees<T> {
+public class TwoTreeFourTrees {
 	private Node root = new Node();
 	private int height = 1;
-	
-	public TwoTreeFourTrees() {
-		super();
-		this.root.setStatus(Node.ROOT & Node.LEAF);
-	}
-	
-	public void add(T data) {
-		if (this.root.isElementsFull()) {
-			Integer tmp = this.root.getElements().get(1);
-			this.root.enlever(tmp);
-			
-			Node nouvelleFeuille = new Node();
-			nouvelleFeuille.ajouter(this.root.enlever(this.root.getElements().get(0)));
-			
-			if (this.root.getFather() == null) {
-				Node nouveauPere = new Node();
-				nouveauPere.ajouter(tmp);
-				nouveauPere.setStatus(Node.ROOT);
-				this.height++;
+		
+	public void add(Integer data) {
+		Node current = this.root;
+		while (true) {
+			//1. If the current node is a 4-node:
+			if (current.is4Node()) {
+				System.out.println("Current is a 4Node");
+				//Remove and save the middle value to get a 3-node.
+				Integer middleValue = current.getValue(1);
+				current.remove(middleValue);
+				//Split the remaining 3-node up into a pair of 2-nodes (the now missing middle value is handled in the next step).
+				System.out.println("Split current");
+				Node newNode = new Node();
+				Integer tmp = current.getValue(1);
+				current.remove(tmp);
+				newNode.add(tmp);
+				//If this is the root node (which thus has no parent):
+				if (current.isRoot()) {
+					System.out.println("New root");
+					//the middle value becomes the new root 2-node and the tree height increases by 1.
+					Node newRoot = new Node();
+					newRoot.add(middleValue);
+					this.root = newRoot;
+					this.height++;
+					current.setFather(newRoot);
+					newNode.setFather(newRoot);
+					newRoot.addSon(current);
+					newRoot.addSon(newNode);
+					// Ascend into the root.
+					current = this.root;
+				} else {
+					//Otherwise, push the middle value up into the parent node
+					current.getFather().add(middleValue);
+					//Ascend into the parent node.
+					current = current.getFather();
+				}
+			}
+			//2. Find the child whose interval contains the value to be inserted.
+			//If that child is a leaf, insert the value into the child node and finish
+			//Otherwise, descend into the child and repeat from step 1
+			if (current.isLeaf()) {
+				System.out.println("Adding data !");
+				current.add(data);
+				break;
+			} else {
+				current = this.getChildByInterval(current, data);
 			}
 		}
-		
-		/*
-		 * If the current node is a 4-node:
- 		 * Remove and save the middle value to get a 3-node.
- 		 * Split the remaining 3-node up into a pair of 2-nodes (the now missing middle value is handled in the next step).
- 		 * If this is the root node (which thus has no parent):
- 		 * the middle value becomes the new root 2-node and the tree height increases by 1. Ascend into the root.
-		 * Otherwise, push the middle value up into the parent node. Ascend into the parent node.
-		 * Find the child whose interval contains the value to be inserted.
-		 * If that child is a leaf, insert the value into the child node and finish.
-		 * Otherwise, descend into the child and repeat from step 1.[3][4]
-		 */
 	}
-	public void remove(T data) {
+	
+	private Node getChildByInterval(Node node, Integer data) {
+		for (int i = 0; i < node.size(); i++) {
+			if (data < node.getValue(i)) return node.getSon(i);
+		}
+		return node.getSon(node.size());
+	}
+	
+	public void remove(Integer data) {
 		/*
 		 * Find the element to be deleted.
 		 * If the element is not in a leaf node, remember its location and continue searching until a leaf, which will contain the element’s successor, is reached. The successor can be either the largest key that is smaller than the one to be removed, or the smallest key that is larger than the one to be removed. It is simplest to make adjustments to the tree from the top down such that the leaf node found is not a 2-node. That way, after the swap, there will not be an empty leaf node.
@@ -55,6 +78,16 @@ public class TwoTreeFourTrees<T> {
 		 * Once the sought value is reached, it can now be placed at the removed entry's location without a problem because we have ensured that the leaf node has more than 1 key.
 		 */
 	}
+	public void display() {
+		this.display_rec(this.root);
+	}
+	private void display_rec(Node node) {
+		node.print();
+		for (int i = 0; i < node.getSons().size(); i++) {
+			this.display_rec(node.getSon(i));
+		}
+	}
+
 	public Node getRoot() {
 		return root;
 	}

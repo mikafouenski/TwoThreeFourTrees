@@ -1,14 +1,16 @@
 package twoTreeFourTrees;
 
-import java.util.ArrayList;
-
 public class Main {
 
 	public static void main(String[] args) {
-		ArrayList<Integer> test = new ArrayList<Integer>();
-		test.add(null);
-		test.add(new Integer(56));
-		System.out.println(test.get(0));
+		TwoTreeFourTrees twoTreeFourTrees = new TwoTreeFourTrees();
+		twoTreeFourTrees.add(60);
+		twoTreeFourTrees.add(40);
+		twoTreeFourTrees.add(20);
+		twoTreeFourTrees.add(10);
+		twoTreeFourTrees.add(11);
+		twoTreeFourTrees.add(1);
+		twoTreeFourTrees.display();
 	}
 
 }
