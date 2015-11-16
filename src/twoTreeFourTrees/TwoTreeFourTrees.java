@@ -1,5 +1,8 @@
 package twoTreeFourTrees;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class TwoTreeFourTrees {
 	private Node root = new Node();
 	private int height = 1;
@@ -9,7 +12,6 @@ public class TwoTreeFourTrees {
 		while (true) {
 			//1. If the current node is a 4-node:
 			if (current.is4Node()) {
-				System.out.println("Current is a 4Node");
 				//Remove and save the middle value to get a 3-node.
 				Integer middleValue = current.getValue(1);
 				current.remove(middleValue);
@@ -82,12 +84,16 @@ public class TwoTreeFourTrees {
 		 */
 	}
 	public void display() {
-		this.display_rec(this.root);
-	}
-	private void display_rec(Node node) {
-		node.print();
-		for (int i = 0; i < node.getSons().size(); i++) {
-			this.display_rec(node.getSon(i));
+		this.root.print();
+		System.out.println();
+		Queue<Node> queue = new LinkedList<>();
+		for (int i = 0; i < this.root.getSons().size(); i++) 
+			queue.add(this.root.getSon(i));
+		while (! queue.isEmpty()){
+			Node next = queue.remove();
+			next.print();
+			for (int i = 0; i < next.getSons().size(); i++) 
+				queue.add(next.getSon(i));
 		}
 	}
 
