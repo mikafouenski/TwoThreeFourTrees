@@ -8,8 +8,10 @@ public class Main {
 		twoTreeFourTrees.add(40);
 		twoTreeFourTrees.add(20);
 		twoTreeFourTrees.add(10);
-		twoTreeFourTrees.add(11);
-		twoTreeFourTrees.add(1);
+		twoTreeFourTrees.add(27);
+		twoTreeFourTrees.add(30);
+		twoTreeFourTrees.add(33);
+		twoTreeFourTrees.add(36);
 		twoTreeFourTrees.display();
 	}
 

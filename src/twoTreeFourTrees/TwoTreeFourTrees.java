@@ -35,7 +35,10 @@ public class TwoTreeFourTrees {
 					current = this.root;
 				} else {
 					//Otherwise, push the middle value up into the parent node
+					newNode.setFather(current.getFather());
 					current.getFather().add(middleValue);
+					if (current.getFather().is3Node()) current.getFather().getSons().add(1, newNode);
+					if (current.getFather().is4Node()) current.getFather().getSons().add(2, newNode);
 					//Ascend into the parent node.
 					current = current.getFather();
 				}
