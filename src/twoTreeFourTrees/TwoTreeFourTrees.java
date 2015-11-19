@@ -1,70 +1,64 @@
 package twoTreeFourTrees;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class TwoTreeFourTrees {
 	private Node root = new Node();
-	private int height = 1;
+	
+	private void split(Node node, int i) {
+		Node newNode = new Node();
+		newNode.getValues()[0] = node.getSons()[i].getValues()[2];
+		newNode.getSons()[0] = node.getSons()[i].getSons()[2];
+		newNode.getSons()[1] = node.getSons()[i].getSons()[3];
+		 node.getSons()[i].getValues()[2] = null;
+		node.getSons()[i].getSons()[2] = null;
+		node.getSons()[i].getSons()[3] = null;
+		newNode.setNbKey(1);
+		node.getSons()[i].setNbKey(1);
+		for (int j = node.getNbKey()  - 1; j >= i; --j) {
+			node.getValues()[j + 1] = node.getValues()[j];
+		}
+		for (int j = node.getNbKey(); j > i; --j) {
+			node.getSons()[j + 1] = node.getSons()[j];
+		}
+		node.getSons()[i + 1] = newNode;
+		node.getValues()[i] = node.getSons()[i].getValues()[1];
+		node.getSons()[i].getValues()[1] = null;
+		node.setNbKey(node.getNbKey() + 1);
+	}
+	
+	private boolean insert(Node node, Integer data) { // eclatement a la descente
+		int i = 0;
+		while ( (i < node.getNbKey()) && (data > node.getValues()[i]) ) {
+			i = i + 1;
+		}
+		if ((i < node.getNbKey()) && (data == node.getValues()[i])) return false;
 		
-	public void add(Integer data) {
-		Node current = this.root;
-		while (true) {
-			//1. If the current node is a 4-node:
-			if (current.is4Node()) {
-				//Remove and save the middle value to get a 3-node.
-				Integer middleValue = current.getValue(1);
-				current.remove(middleValue);
-				//Split the remaining 3-node up into a pair of 2-nodes (the now missing middle value is handled in the next step).
-				System.out.println("Split current");
-				Node newNode = new Node();
-				Integer tmp = current.getValue(1);
-				current.remove(tmp);
-				newNode.add(tmp);
-				//If this is the root node (which thus has no parent):
-				if (current.isRoot()) {
-					System.out.println("New root");
-					//the middle value becomes the new root 2-node and the tree height increases by 1.
-					Node newRoot = new Node();
-					newRoot.add(middleValue);
-					this.root = newRoot;
-					this.height++;
-					current.setFather(newRoot);
-					newNode.setFather(newRoot);
-					newRoot.addSon(current);
-					newRoot.addSon(newNode);
-					// Ascend into the root.
-					current = this.root;
-				} else {
-					//Otherwise, push the middle value up into the parent node
-					newNode.setFather(current.getFather());
-					current.getFather().add(middleValue);
-					if (current.getFather().is3Node()) current.getFather().getSons().add(1, newNode);
-					if (current.getFather().is4Node()) current.getFather().getSons().add(2, newNode);
-					//Ascend into the parent node.
-					current = current.getFather();
-				}
+		if (node.getSons()[1] != null) {
+			if (node.getSons()[i].getNbKey() == 3) {
+				if (node.getSons()[i].getValues()[1] == data) return false;
+				this.split(node, i);
+				if (data > node.getValues()[i]) i = i + 1;
 			}
-			//2. Find the child whose interval contains the value to be inserted.
-			//If that child is a leaf, insert the value into the child node and finish
-			//Otherwise, descend into the child and repeat from step 1
-			if (current.isLeaf()) {
-				System.out.println("Adding data !");
-				current.add(data);
-				break;
-			} else {
-				current = this.getChildByInterval(current, data);
-			}
+			return this.insert(node.getSons()[i], data);
+		} else {
+			for (int j = node.getNbKey() - 1; j >= i; --j)
+				node.getValues()[j + 1] = node.getValues()[j];
+			node.getValues()[i] = data;
+			node.setNbKey(node.getNbKey() + 1);
+			node.getSons()[node.getNbKey()] = null;
+			return true;
 		}
 	}
 	
-	private Node getChildByInterval(Node node, Integer data) {
-		for (int i = 0; i < node.size(); i++) {
-			if (data < node.getValue(i)) return node.getSon(i);
+	public boolean add(Integer data) {
+		if (this.root.getNbKey() == 3) {
+			Node newRoot = new Node();
+			newRoot.getSons()[0] = this.root;
+			this.root = newRoot;
+			split(this.root, 0);
 		}
-		return node.getSon(node.size());
+		return this.insert(this.root, data);
 	}
-	
+
 	public void remove(Integer data) {
 		/*
 		 * Find the element to be deleted.
@@ -84,18 +78,16 @@ public class TwoTreeFourTrees {
 		 */
 	}
 	public void display() {
-		this.root.print();
-		System.out.println();
-		Queue<Node> queue = new LinkedList<>();
-		for (int i = 0; i < this.root.getSons().size(); i++) 
-			queue.add(this.root.getSon(i));
-		while (! queue.isEmpty()){
-			Node next = queue.remove();
-			next.print();
-			for (int i = 0; i < next.getSons().size(); i++) 
-				queue.add(next.getSon(i));
-		}
+		this.print(this.root, "");
 	}
+	
+	private void print(Node node, String indent) {
+        if (node == null) return;
+        System.out.println(indent + node.print());
+        for (int i = 0; i < node.getSons().length; i++) {
+			this.print(node.getSons()[i], indent + "  ");
+		}
+    }
 
 	public Node getRoot() {
 		return root;
