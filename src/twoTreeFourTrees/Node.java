@@ -1,28 +1,19 @@
 package twoTreeFourTrees;
 
 public class Node {
-	private Node father = null;
 	private Integer[] values = new Integer[3];
 	private Node[] sons = new Node[4];
 	private int nbKey = 0;
 	
-	public String print() {
+	public String toString() {
 		String node = "[";
-		for (int i = 0; i < this.values.length; i++) {
+		for (int i = 0; i < this.nbKey; i++) {
 			node += this.values[i];
-			if (i + 1 < this.values.length)
+			if (i + 1 < this.nbKey)
 				node += ",";
 		}
-		node += "]" + "nbKey = " + this.nbKey;
+		node += "]";
 		return node;
-	}
-
-	public Node getFather() {
-		return father;
-	}
-
-	public void setFather(Node father) {
-		this.father = father;
 	}
 
 	public Integer[] getValues() {

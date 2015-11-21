@@ -2,18 +2,17 @@ package twoTreeFourTrees;
 
 public class TwoTreeFourTrees {
 	private Node root = new Node();
-	
+
 	private void split(Node node, int i) {
 		Node newNode = new Node();
 		newNode.getValues()[0] = node.getSons()[i].getValues()[2];
 		newNode.getSons()[0] = node.getSons()[i].getSons()[2];
 		newNode.getSons()[1] = node.getSons()[i].getSons()[3];
-		 node.getSons()[i].getValues()[2] = null;
 		node.getSons()[i].getSons()[2] = null;
 		node.getSons()[i].getSons()[3] = null;
 		newNode.setNbKey(1);
 		node.getSons()[i].setNbKey(1);
-		for (int j = node.getNbKey()  - 1; j >= i; --j) {
+		for (int j = node.getNbKey() - 1; j >= i; --j) {
 			node.getValues()[j + 1] = node.getValues()[j];
 		}
 		for (int j = node.getNbKey(); j > i; --j) {
@@ -21,22 +20,25 @@ public class TwoTreeFourTrees {
 		}
 		node.getSons()[i + 1] = newNode;
 		node.getValues()[i] = node.getSons()[i].getValues()[1];
-		node.getSons()[i].getValues()[1] = null;
 		node.setNbKey(node.getNbKey() + 1);
 	}
-	
-	private boolean insert(Node node, Integer data) { // eclatement a la descente
+
+	private boolean insert(Node node, Integer data) { // eclatement a la
+														// descente
 		int i = 0;
-		while ( (i < node.getNbKey()) && (data > node.getValues()[i]) ) {
+		while ((i < node.getNbKey()) && (data > node.getValues()[i])) {
 			i = i + 1;
 		}
-		if ((i < node.getNbKey()) && (data == node.getValues()[i])) return false;
-		
+		if ((i < node.getNbKey()) && (data == node.getValues()[i]))
+			return false;
+
 		if (node.getSons()[1] != null) {
 			if (node.getSons()[i].getNbKey() == 3) {
-				if (node.getSons()[i].getValues()[1] == data) return false;
+				if (node.getSons()[i].getValues()[1] == data)
+					return false;
 				this.split(node, i);
-				if (data > node.getValues()[i]) i = i + 1;
+				if (data > node.getValues()[i])
+					i = i + 1;
 			}
 			return this.insert(node.getSons()[i], data);
 		} else {
@@ -48,7 +50,7 @@ public class TwoTreeFourTrees {
 			return true;
 		}
 	}
-	
+
 	public boolean add(Integer data) {
 		if (this.root.getNbKey() == 3) {
 			Node newRoot = new Node();
@@ -59,40 +61,169 @@ public class TwoTreeFourTrees {
 		return this.insert(this.root, data);
 	}
 
-	public void remove(Integer data) {
-		/*
-		 * Find the element to be deleted.
-		 * If the element is not in a leaf node, remember its location and continue searching until a leaf, which will contain the element’s successor, is reached. The successor can be either the largest key that is smaller than the one to be removed, or the smallest key that is larger than the one to be removed. It is simplest to make adjustments to the tree from the top down such that the leaf node found is not a 2-node. That way, after the swap, there will not be an empty leaf node.
-		 * If the element is in a 2-node leaf, just make the adjustments below.
-		 * Make the following adjustments when a 2-node – except the root node – is encountered on the way to the leaf we want to remove:
-		 * 
-		 * If a sibling on either side of this node is a 3-node or a 4-node (thus having more than 1 key), perform a rotation with that sibling:
-		 * The key from the other sibling closest to this node moves up to the parent key that overlooks the two nodes.
-		 * The parent key moves down to this node to form a 3-node.
-		 * The child that was originally with the rotated sibling key is now this node's additional child.
-		 * If the parent is a 2-node and the sibling is also a 2-node, combine all three elements to form a new 4-node and shorten the tree. (This rule can only trigger if the parent 2-node is the root, since all other 2-nodes along the way will have been modified to not be 2-nodes. This is why "shorten the tree" here preserves balance; this is also an important assumption for the fusion operation.)
-		 * If the parent is a 3-node or a 4-node and all adjacent siblings are 2-nodes, do a fusion operation with the parent and an adjacent sibling:
-		 * The adjacent sibling and the parent key overlooking the two sibling nodes come together to form a 4-node.
-		 * Transfer the sibling's children to this node.
-		 * Once the sought value is reached, it can now be placed at the removed entry's location without a problem because we have ensured that the leaf node has more than 1 key.
-		 */
+	private void merge(Node node, int i) {
+		Node gauche, droite;
+		gauche = node.getSons()[i];
+		droite = node.getSons()[i + 1];
+		gauche.getValues()[1] = node.getValues()[i];
+		gauche.getValues()[2] = node.getValues()[0];
+		gauche.getSons()[2] = droite.getSons()[0];
+		gauche.getSons()[3] = droite.getSons()[1];
+		gauche.setNbKey(3);
+		for (int j = i; j < node.getNbKey() - 1; ++j) {
+			node.getValues()[j] = node.getValues()[j + 1];
+		}
+		for (int j = i; j < node.getNbKey(); ++j) {
+			node.getSons()[j] = node.getSons()[j + 1];
+		}
+		node.setNbKey(node.getNbKey() - 1);
 	}
+
+	private void spinRight(Node node, int i) {
+		Node gauche, droite;
+		gauche = node.getSons()[i - 1];
+		droite = node.getSons()[i];
+		for (int j = node.getNbKey() - 1; j >= i; --j) {
+			node.getValues()[j + 1] = node.getValues()[j];
+		}
+		for (int j = node.getNbKey(); j > i; --j) {
+			node.getSons()[j + 1] = node.getSons()[j];
+		}
+		droite.getSons()[1] = droite.getSons()[0];
+		droite.getValues()[0] = node.getValues()[i - 1];
+		droite.setNbKey(droite.getNbKey() + 1);
+		node.getValues()[i - 1] = gauche.getValues()[gauche.getNbKey() - 1];
+		droite.getSons()[0] = gauche.getSons()[gauche.getNbKey()];
+		gauche.setNbKey(gauche.getNbKey() - 1);
+	}
+
+	private void spinLeft(Node node, int i) {
+		Node gauche, droite;
+		gauche = node.getSons()[i];
+		droite = node.getSons()[i + 1];
+		gauche.getValues()[1] = node.getValues()[i];
+		gauche.getSons()[2] = droite.getSons()[0];
+		gauche.setNbKey(2);
+		node.getValues()[i] = droite.getValues()[0];
+		for (int j = 0; j < droite.getNbKey() - 1; j++) {
+			droite.getValues()[j] = droite.getValues()[j + 1];
+		}
+		if (droite.getSons()[0] != null) {
+			for (int j = 0; j < droite.getNbKey(); j++) {
+				droite.getSons()[j] = droite.getSons()[j + 1];
+			}
+		}
+		droite.setNbKey(droite.getNbKey() - 1);
+	}
+
+	private Integer getMaxValue(Node node) {
+		while (node.getSons()[0] != null) {
+			node = node.getSons()[node.getNbKey()];
+		}
+		return node.getValues()[node.getNbKey()];
+	}
+
+	private Integer getMinValue(Node node) {
+		while (node.getSons()[0] != null) {
+			node = node.getSons()[0];
+		}
+		return node.getValues()[0];
+	}
+
+	private void delete(Node node, Integer data) {
+		int i = 0;
+		while ((i < node.getNbKey()) && (data > node.getValues()[i])) {
+			i = i + 1;
+		}
+		if (node.getSons()[0] != null) {
+			if ((i < node.getNbKey()) && (node.getValues()[i] == data)) {
+				if (node.getSons()[i].getNbKey() > 1) {
+					node.getValues()[i] = this.getMaxValue(node.getSons()[i]);
+					this.delete(node.getSons()[i + 1], node.getValues()[i]);
+				} else {
+					if (node.getSons()[i + 1].getNbKey() > 1) {
+						node.getValues()[i] = this.getMinValue(node.getSons()[i + 1]);
+						this.delete(node.getSons()[i + 1], node.getValues()[i]);
+					} else {
+						this.merge(node, i);
+						this.delete(node.getSons()[i], data);
+					}
+				}
+			} else {
+				if (node.getSons()[i].getNbKey() == 1) {
+					if ((i > 0) && (node.getSons()[i - 1].getNbKey() > 1)) {
+						this.spinRight(node, i);
+					} else {
+						if ((i < node.getNbKey()) && (node.getSons()[i + 1].getNbKey() > 1)) {
+							this.spinLeft(node, i);
+						} else {
+							if (i > 0) {
+								i--;
+							}
+							this.merge(node, i);
+						}
+					}
+				}
+				this.delete(node.getSons()[i], data);
+			}
+		} else {
+			if ((i < node.getNbKey()) && (node.getValues()[i] == data)) {
+				for (int j = i; j < node.getNbKey() - 1; j++) {
+					node.getValues()[j] = node.getValues()[j + 1];
+				}
+				node.setNbKey(node.getNbKey() - 1);
+			}
+		}
+	}
+
+	public void remove(Integer data) {
+		this.delete(this.root, data);
+		if (this.root.getNbKey() == 0) {
+			this.root = this.root.getSons()[0];
+		}
+	}
+
 	public void display() {
 		this.print(this.root, "");
 	}
 	
+	private int searchPos(Node node, Integer data) {
+		int gauche = 0, droite = node.getNbKey() - 1, millieu = (gauche + droite) / 2;
+		while (gauche <= droite) {
+			if (data == node.getValues()[millieu]) {
+				return millieu;
+			}
+			if (data < node.getValues()[millieu]) {
+				droite = millieu - 1;
+			} else {
+				gauche = millieu + 1;
+			}
+			millieu = (gauche + droite) / 2;
+		}
+		return gauche;
+	}
+	
+	private NodeSearch find(Node node, Integer data) {
+		if (node == null) return new NodeSearch(null, null);
+		else {
+			int i = this.searchPos(node, data);
+			if (i < node.getNbKey() && node.getValues()[i] == data)
+				return new NodeSearch(node, i);
+			else
+				return this.find(node.getSons()[i], data);
+		}
+	}
+	
+	public NodeSearch search(Integer data) {
+		return this.find(this.root, data);
+	}
+
 	private void print(Node node, String indent) {
-        if (node == null) return;
-        System.out.println(indent + node.print());
-        for (int i = 0; i < node.getSons().length; i++) {
+		if (node == null)
+			return;
+		System.out.println(indent + node);
+		for (int i = 0; i < node.getSons().length; i++) {
 			this.print(node.getSons()[i], indent + "  ");
 		}
-    }
-
-	public Node getRoot() {
-		return root;
-	}
-	public void setRoot(Node root) {
-		this.root = root;
 	}
 }
