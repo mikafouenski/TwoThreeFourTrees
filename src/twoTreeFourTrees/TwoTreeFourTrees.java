@@ -60,6 +60,11 @@ public class TwoTreeFourTrees {
 		}
 		return this.insert(this.root, data);
 	}
+	public void add(Integer[] array) {
+		for (int i = 0; i < array.length; i++) {
+			this.add(array[i]);
+		}
+	}
 
 	private void merge(Node node, int i) {
 		Node gauche, droite;
