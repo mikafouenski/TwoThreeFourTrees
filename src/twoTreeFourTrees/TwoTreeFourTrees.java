@@ -60,6 +60,7 @@ public class TwoTreeFourTrees {
 		}
 		return this.insert(this.root, data);
 	}
+
 	public void add(Integer[] array) {
 		for (int i = 0; i < array.length; i++) {
 			this.add(array[i]);
@@ -91,7 +92,7 @@ public class TwoTreeFourTrees {
 		for (int j = node.getNbKey() - 1; j >= i; --j) {
 			node.getValues()[j + 1] = node.getValues()[j];
 		}
-		for (int j = node.getNbKey(); j > i; --j) {
+		for (int j = node.getNbKey(); j >= i; --j) {
 			node.getSons()[j + 1] = node.getSons()[j];
 		}
 		droite.getSons()[1] = droite.getSons()[0];
@@ -191,7 +192,7 @@ public class TwoTreeFourTrees {
 	public void display() {
 		this.print(this.root, "");
 	}
-	
+
 	private int searchPos(Node node, Integer data) {
 		int gauche = 0, droite = node.getNbKey() - 1, millieu = (gauche + droite) / 2;
 		while (gauche <= droite) {
@@ -207,9 +208,10 @@ public class TwoTreeFourTrees {
 		}
 		return gauche;
 	}
-	
+
 	private NodeSearch find(Node node, Integer data) {
-		if (node == null) return new NodeSearch(null, null);
+		if (node == null)
+			return new NodeSearch();
 		else {
 			int i = this.searchPos(node, data);
 			if (i < node.getNbKey() && node.getValues()[i] == data)
@@ -218,7 +220,7 @@ public class TwoTreeFourTrees {
 				return this.find(node.getSons()[i], data);
 		}
 	}
-	
+
 	public NodeSearch search(Integer data) {
 		return this.find(this.root, data);
 	}
@@ -227,7 +229,7 @@ public class TwoTreeFourTrees {
 		if (node == null)
 			return;
 		System.out.println(indent + node);
-		for (int i = 0; i < node.getSons().length; i++) {
+		for (int i = 0; i < node.getNbKey() + 1; i++) {
 			this.print(node.getSons()[i], indent + "  ");
 		}
 	}

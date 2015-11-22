@@ -9,6 +9,11 @@ public class NodeSearch {
 		this.node = node;
 		this.pos = pos;
 	}
+	public NodeSearch() {
+		super();
+		this.node = null;
+		this.pos = null;
+	}
 
 	public Node getNode() {
 		return node;
