@@ -126,7 +126,7 @@ public class TwoThreeFourTrees {
 		while (node.getSons()[0] != null) {
 			node = node.getSons()[node.getNbKey()];
 		}
-		return node.getValues()[node.getNbKey()];
+		return node.getValues()[node.getNbKey() - 1];
 	}
 
 	private Integer getMinValue(Node node) {
