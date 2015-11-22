@@ -1,4 +1,4 @@
-package twoTreeFourTrees;
+package twoThreeFourTrees;
 
 public class NodeSearch {
 	Node node;

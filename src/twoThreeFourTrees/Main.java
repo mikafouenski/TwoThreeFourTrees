@@ -1,16 +1,16 @@
-package twoTreeFourTrees;
+package twoThreeFourTrees;
 
 public class Main {
 
 	public static void main(String[] args) {
-		TwoTreeFourTrees twoTreeFourTrees = new TwoTreeFourTrees();
+		TwoThreeFourTrees twoThreeFourTrees = new TwoThreeFourTrees();
 		Integer[] array = {60, 40, 20, 10, 27, 30, 33, 36, 61, 41, 21, 11, 28, 31, 34, 37};
-		twoTreeFourTrees.add(array);
-		twoTreeFourTrees.remove(20);
+		twoThreeFourTrees.add(array);
+		twoThreeFourTrees.remove(20);
 		//twoTreeFourTrees.remove(34);
-		twoTreeFourTrees.display();
+		twoThreeFourTrees.display();
 		
-		NodeSearch search = twoTreeFourTrees.search(31);
+		NodeSearch search = twoThreeFourTrees.search(31);
 		System.out.println("31 dans " + search.getNode() + " pos:" + search.getPos());
 	}
 

@@ -1,4 +1,4 @@
-package twoTreeFourTrees;
+package twoThreeFourTrees;
 
 public class Node {
 	private Integer[] values = new Integer[3];

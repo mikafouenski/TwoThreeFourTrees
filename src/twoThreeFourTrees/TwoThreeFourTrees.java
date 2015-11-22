@@ -1,6 +1,6 @@
-package twoTreeFourTrees;
+package twoThreeFourTrees;
 
-public class TwoTreeFourTrees {
+public class TwoThreeFourTrees {
 	private Node root = new Node();
 
 	private void split(Node node, int i) {
