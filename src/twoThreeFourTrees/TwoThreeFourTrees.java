@@ -85,9 +85,11 @@ public class TwoThreeFourTrees {
 	private void spinRight(Node node, int i) {
 		Node gauche = node.getSons()[i - 1];
 		Node droite = node.getSons()[i];
-		for (int j = droite.getNbKey() - 1; j > 0; --j) {
-			droite.getSons()[j + 2] = droite.getSons()[j + 1];
-			droite.getValues()[j + 1] = droite.getValues()[j];
+		for (int j = node.getNbKey() - 1; j >= i; --j) {
+			node.getValues()[j + 1] = node.getValues()[j];
+		}
+		for (int j = node.getNbKey(); j > i; --j) {
+			node.getSons()[j + 1] = node.getSons()[j];
 		}
 		droite.getSons()[1] = droite.getSons()[0];
 		droite.getValues()[0] = node.getValues()[i - 1];
@@ -123,12 +125,10 @@ public class TwoThreeFourTrees {
 		return node.getValues()[node.getNbKey() - 1];
 	}
 
-	private Integer getMinValue(Node node) {
-		while (node.getSons()[0] != null) {
-			node = node.getSons()[0];
-		}
-		return node.getValues()[0];
-	}
+	/*
+	 * private Integer getMinValue(Node node) { while (node.getSons()[0] !=
+	 * null) { node = node.getSons()[0]; } return node.getValues()[0]; }
+	 */
 
 	private boolean delete(Node node, Integer data) { // suppresion a la
 														// remontée
@@ -175,7 +175,8 @@ public class TwoThreeFourTrees {
 	public void remove(Integer data) {
 		if (this.delete(this.root, data)) {
 			Node tmp = this.root;
-			this.root = tmp.getSons()[0];
+			if (tmp.getSons()[0] != null)
+				this.root = tmp.getSons()[0];
 		}
 	}
 
@@ -216,11 +217,12 @@ public class TwoThreeFourTrees {
 		this.print(this.root, stringBuilder, "");
 		System.out.println(stringBuilder);
 	}
-	
+
 	private void print(Node node, StringBuilder stringBuilder, String indent) {
 		stringBuilder.append(node);
 		stringBuilder.append("\n");
-		if (node.getSons()[0] == null) return;
+		if (node.getSons()[0] == null)
+			return;
 		for (int i = 0; i < node.getNbKey(); ++i) {
 			stringBuilder.append(indent);
 			stringBuilder.append("├─");
