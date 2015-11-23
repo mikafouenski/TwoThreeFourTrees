@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
 	private static void run() {
 		Random rand = new Random();
-		System.out.println("Please enter the number of random generation : ");
+		System.out.print("Please enter the number of random generation : ");
 		Scanner scanner = new Scanner(System.in);
 		int n = scanner.nextInt();
 		scanner.close();
@@ -16,13 +16,13 @@ public class Main {
 			NodeSearch search = tree.search(number);
 			if (search.getNode() != null) {
 				tree.remove(number);
-				System.out.println("Le nombre " + number + " est dans l'arbre, on l'ENLEVE");
+				System.out.println("The number " + number + " is in the tree, we REMOVE it");
 			} else {
 				tree.add(number);
-				System.out.println("Le nombre " + number + " n'est pas dans l'arbre, on l'AJOUTE");
+				System.out.println("The number  " + number + " is not in the tree, we ADD it");
 			}
 			tree.display();
-			System.out.println("----------- PROCHAIN -----------");
+			System.out.println("--------------- NEXT ---------------");
 		}
 	}
 	
