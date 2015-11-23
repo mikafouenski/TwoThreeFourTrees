@@ -85,13 +85,15 @@ public class TwoThreeFourTrees {
 	private void spinRight(Node node, int i) {
 		Node gauche = node.getSons()[i - 1];
 		Node droite = node.getSons()[i];
-		droite.getValues()[1] = droite.getValues()[0];
-		droite.getSons()[2] = droite.getSons()[1];
+		for (int j = droite.getNbKey() - 1; j > 0; --j) {
+			droite.getSons()[j + 2] = droite.getSons()[j + 1];
+			droite.getValues()[j + 1] = droite.getValues()[j];
+		}
 		droite.getSons()[1] = droite.getSons()[0];
 		droite.getValues()[0] = node.getValues()[i - 1];
-		droite.getSons()[0] = gauche.getSons()[gauche.getNbKey()];
-		droite.setNbKey(2);
+		droite.setNbKey(droite.getNbKey() + 1);
 		node.getValues()[i - 1] = gauche.getValues()[gauche.getNbKey() - 1];
+		droite.getSons()[0] = gauche.getSons()[gauche.getNbKey()];
 		gauche.setNbKey(gauche.getNbKey() - 1);
 	}
 
@@ -99,15 +101,15 @@ public class TwoThreeFourTrees {
 		Node gauche, droite;
 		gauche = node.getSons()[i];
 		droite = node.getSons()[i + 1];
-		gauche.getValues()[1] = node.getValues()[i];
-		gauche.getSons()[2] = droite.getSons()[0];
-		gauche.setNbKey(2);
+		gauche.setNbKey(gauche.getNbKey() + 1);
+		gauche.getValues()[gauche.getNbKey() - 1] = node.getValues()[i];
+		gauche.getSons()[gauche.getNbKey()] = droite.getSons()[0];
 		node.getValues()[i] = droite.getValues()[0];
-		for (int j = 0; j < droite.getNbKey() - 1; j++) {
+		for (int j = 0; j < droite.getNbKey() - 1; ++j) {
 			droite.getValues()[j] = droite.getValues()[j + 1];
 		}
 		if (droite.getSons()[0] != null) {
-			for (int j = 0; j < droite.getNbKey(); j++) {
+			for (int j = 0; j < droite.getNbKey(); ++j) {
 				droite.getSons()[j] = droite.getSons()[j + 1];
 			}
 		}
@@ -128,14 +130,15 @@ public class TwoThreeFourTrees {
 		return node.getValues()[0];
 	}
 
-	private boolean delete(Node node, Integer data) {
+	private boolean delete(Node node, Integer data) { // suppresion a la
+														// remontée
 		int i = 0;
 		while (i < node.getNbKey() && data > node.getValues()[i]) {
 			i = i + 1;
 		}
 		if (node.getSons()[0] == null) {
 			if (i < node.getNbKey() && data == node.getValues()[i]) {
-				for (int j = 0; j < node.getNbKey() - 1; ++j) {
+				for (int j = i; j < node.getNbKey() - 1; ++j) {
 					node.getValues()[j] = node.getValues()[j + 1];
 				}
 				node.setNbKey(node.getNbKey() - 1);

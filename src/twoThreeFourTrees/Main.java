@@ -19,7 +19,7 @@ public class Main {
 				System.out.println("Le nombre " + number + " n'est pas dans l'arbre, on l'AJOUTE");
 			}
 			tree.display();
-			System.out.println("------- PROCHAIN -------");
+			System.out.println("----------- PROCHAIN -----------");
 		}
 	}
 	
