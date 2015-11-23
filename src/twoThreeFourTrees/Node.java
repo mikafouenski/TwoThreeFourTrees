@@ -12,7 +12,7 @@ public class Node {
 			if (i + 1 < this.nbKey)
 				node += ",";
 		}
-		node += "] ";
+		node += "]";
 		return node;
 	}
 

@@ -179,10 +179,6 @@ public class TwoThreeFourTrees {
 		}
 	}
 
-	public void display() {
-		this.print(this.root, "");
-	}
-
 	private int searchPos(Node node, Integer data) {
 		int gauche = 0, droite = node.getNbKey() - 1, millieu = (gauche + droite) / 2;
 		while (gauche <= droite) {
@@ -215,12 +211,23 @@ public class TwoThreeFourTrees {
 		return this.find(this.root, data);
 	}
 
-	private void print(Node node, String indent) {
-		if (node == null)
-			return;
-		System.out.println(indent + node);
-		for (int i = 0; i < node.getNbKey() + 1; i++) {
-			this.print(node.getSons()[i], indent + "  ");
+	public void display() {
+		StringBuilder stringBuilder = new StringBuilder();
+		this.print(this.root, stringBuilder, "");
+		System.out.println(stringBuilder);
+	}
+	
+	private void print(Node node, StringBuilder stringBuilder, String indent) {
+		stringBuilder.append(node);
+		stringBuilder.append("\n");
+		if (node.getSons()[0] == null) return;
+		for (int i = 0; i < node.getNbKey(); ++i) {
+			stringBuilder.append(indent);
+			stringBuilder.append("├─");
+			this.print(node.getSons()[i], stringBuilder, indent + "│ ");
 		}
+		stringBuilder.append(indent);
+		stringBuilder.append("└─");
+		this.print(node.getSons()[node.getNbKey()], stringBuilder, indent + "  ");
 	}
 }
