@@ -16,7 +16,7 @@ public class Main {
 				System.out.println("Le nombre " + number + " est dans l'arbre, on l'ENLEVE");
 			} else {
 				tree.add(number);
-				System.out.println("Le nombre " + number + " n'est dans l'arbre, on l'AJOUTE");
+				System.out.println("Le nombre " + number + " n'est pas dans l'arbre, on l'AJOUTE");
 			}
 			tree.display();
 			System.out.println("------- PROCHAIN -------");

@@ -68,9 +68,8 @@ public class TwoThreeFourTrees {
 	}
 
 	private void merge(Node node, int i) {
-		Node gauche, droite;
-		gauche = node.getSons()[i];
-		droite = node.getSons()[i + 1];
+		Node gauche = node.getSons()[i];
+		Node droite = node.getSons()[i + 1];
 		gauche.getValues()[1] = node.getValues()[i];
 		gauche.getValues()[2] = node.getValues()[0];
 		gauche.getSons()[2] = droite.getSons()[0];
@@ -78,28 +77,21 @@ public class TwoThreeFourTrees {
 		gauche.setNbKey(3);
 		for (int j = i; j < node.getNbKey() - 1; ++j) {
 			node.getValues()[j] = node.getValues()[j + 1];
-		}
-		for (int j = i; j < node.getNbKey(); ++j) {
-			node.getSons()[j] = node.getSons()[j + 1];
+			node.getSons()[j + 1] = node.getSons()[j + 2];
 		}
 		node.setNbKey(node.getNbKey() - 1);
 	}
 
 	private void spinRight(Node node, int i) {
-		Node gauche, droite;
-		gauche = node.getSons()[i - 1];
-		droite = node.getSons()[i];
-		for (int j = node.getNbKey() - 1; j >= i; --j) {
-			node.getValues()[j + 1] = node.getValues()[j];
-		}
-		for (int j = node.getNbKey(); j >= i; --j) {
-			node.getSons()[j + 1] = node.getSons()[j];
-		}
+		Node gauche = node.getSons()[i - 1];
+		Node droite = node.getSons()[i];
+		droite.getValues()[1] = droite.getValues()[0];
+		droite.getSons()[2] = droite.getSons()[1];
 		droite.getSons()[1] = droite.getSons()[0];
 		droite.getValues()[0] = node.getValues()[i - 1];
-		droite.setNbKey(droite.getNbKey() + 1);
-		node.getValues()[i - 1] = gauche.getValues()[gauche.getNbKey() - 1];
 		droite.getSons()[0] = gauche.getSons()[gauche.getNbKey()];
+		droite.setNbKey(2);
+		node.getValues()[i - 1] = gauche.getValues()[gauche.getNbKey() - 1];
 		gauche.setNbKey(gauche.getNbKey() - 1);
 	}
 
@@ -136,56 +128,51 @@ public class TwoThreeFourTrees {
 		return node.getValues()[0];
 	}
 
-	private void delete(Node node, Integer data) {
+	private boolean delete(Node node, Integer data) {
 		int i = 0;
-		while ((i < node.getNbKey()) && (data > node.getValues()[i])) {
+		while (i < node.getNbKey() && data > node.getValues()[i]) {
 			i = i + 1;
 		}
-		if (node.getSons()[0] != null) {
-			if ((i < node.getNbKey()) && (node.getValues()[i] == data)) {
-				if (node.getSons()[i].getNbKey() > 1) {
-					node.getValues()[i] = this.getMaxValue(node.getSons()[i]);
-					this.delete(node.getSons()[i + 1], node.getValues()[i]);
-				} else {
-					if (node.getSons()[i + 1].getNbKey() > 1) {
-						node.getValues()[i] = this.getMinValue(node.getSons()[i + 1]);
-						this.delete(node.getSons()[i + 1], node.getValues()[i]);
-					} else {
-						this.merge(node, i);
-						this.delete(node.getSons()[i], data);
-					}
-				}
-			} else {
-				if (node.getSons()[i].getNbKey() == 1) {
-					if ((i > 0) && (node.getSons()[i - 1].getNbKey() > 1)) {
-						this.spinRight(node, i);
-					} else {
-						if ((i < node.getNbKey()) && (node.getSons()[i + 1].getNbKey() > 1)) {
-							this.spinLeft(node, i);
-						} else {
-							if (i > 0) {
-								i--;
-							}
-							this.merge(node, i);
-						}
-					}
-				}
-				this.delete(node.getSons()[i], data);
-			}
-		} else {
-			if ((i < node.getNbKey()) && (node.getValues()[i] == data)) {
-				for (int j = i; j < node.getNbKey() - 1; j++) {
+		if (node.getSons()[0] == null) {
+			if (i < node.getNbKey() && data == node.getValues()[i]) {
+				for (int j = 0; j < node.getNbKey() - 1; ++j) {
 					node.getValues()[j] = node.getValues()[j + 1];
 				}
 				node.setNbKey(node.getNbKey() - 1);
+				return node.getNbKey() == 0;
+			} else {
+				return false;
+			}
+		} else {
+			if (i < node.getNbKey() && data == node.getValues()[i]) {
+				node.getValues()[i] = this.getMaxValue(node.getSons()[i]);
+				data = node.getValues()[i];
+			}
+			if (this.delete(node.getSons()[i], data)) {
+				if (i < node.getNbKey() && node.getSons()[i + 1].getNbKey() > 1) {
+					this.spinLeft(node, i);
+					return false;
+				} else {
+					if (i > 0 && node.getSons()[i - 1].getNbKey() > 1) {
+						this.spinRight(node, i);
+						return false;
+					} else {
+						if (i > node.getNbKey() - 1)
+							i--;
+						this.merge(node, i);
+						return node.getNbKey() == 0;
+					}
+				}
+			} else {
+				return false;
 			}
 		}
 	}
 
 	public void remove(Integer data) {
-		this.delete(this.root, data);
-		if (this.root.getNbKey() == 0) {
-			this.root = this.root.getSons()[0];
+		if (this.delete(this.root, data)) {
+			Node tmp = this.root;
+			this.root = tmp.getSons()[0];
 		}
 	}
 
