@@ -1,12 +1,15 @@
 package twoThreeFourTrees;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 	private static void run() {
 		Random rand = new Random();
-		int n = 25;
-		
+		System.out.println("Please enter the number of random generation : ");
+		Scanner scanner = new Scanner(System.in);
+		int n = scanner.nextInt();
+		scanner.close();
 		TwoThreeFourTrees tree = new TwoThreeFourTrees();
 		for (int i = 0; i < n; i++) {
 			Integer number = rand.nextInt(n);
