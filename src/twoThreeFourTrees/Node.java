@@ -4,7 +4,7 @@ public class Node {
 	private Integer[] values = new Integer[3];
 	private Node[] sons = new Node[4];
 	private int nbKey = 0;
-	
+
 	public String toString() {
 		String node = "[";
 		for (int i = 0; i < this.nbKey; i++) {

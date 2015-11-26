@@ -11,15 +11,14 @@ public class Main {
 		int n = scanner.nextInt();
 		scanner.close();
 		TwoThreeFourTrees tree = new TwoThreeFourTrees();
-		for (int i = 0; i < n; i++) {
+		for (int i = 1; i <= n; i++) {
 			Integer number = rand.nextInt(n);
-			if (tree.search(number).getNode() != null) {
+			boolean search = tree.search(number);
+			System.out.println(((search) ? "[REMOVE] " : "[ADD] ") + "Number : " + number);
+			if (search)
 				tree.remove(number);
-				System.out.println("[REMOVE] The number " + number + " is in the tree");
-			} else {
+			else
 				tree.add(number);
-				System.out.println("[ADD] The number " + number + " is not in the tree");
-			}
 			tree.display();
 			if (i < n - 1)
 				System.out.println("--------------- NEXT ---------------");
@@ -27,17 +26,26 @@ public class Main {
 	}
 
 	private static void test() {
-		TwoThreeFourTrees twoThreeFourTrees = new TwoThreeFourTrees();
-		// Integer[] array = {60, 40, 20, 10, 27, 30, 33, 36, 61, 41, 21, 11,
-		// 28, 31, 34, 37};
-		twoThreeFourTrees.add(12);
-		twoThreeFourTrees.remove(12);
-		twoThreeFourTrees.add(32);
-		twoThreeFourTrees.display();
+		TwoThreeFourTrees tree = new TwoThreeFourTrees();
+		int compteur = 0;
+		Random rand = new Random();
+		while (true) {
+			compteur++;
+			Integer number = rand.nextInt(200);
+			boolean search = tree.search(number);
+			System.out.println(((search) ? "[REMOVE] " : "[ADD] ") + "Number : " + number + " Etape : " + compteur);
+			if (search)
+				tree.remove(number);
+			else
+				tree.add(number);
+			tree.display();
+			System.out.println("--------------- NEXT ---------------");
+		}
 	}
 
 	public static void main(String[] args) {
-		Main.run();
+		Main.test();
+		// Main.run();
 	}
 
 }
