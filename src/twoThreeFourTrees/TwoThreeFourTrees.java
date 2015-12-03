@@ -199,11 +199,14 @@ public class TwoThreeFourTrees {
 				node = node.getSons()[i];
 		}
 	}
+	
+	
 
-	public void display() {
+	@Override
+	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		this.print(this.root, stringBuilder, "");
-		System.out.println(stringBuilder);
+		return stringBuilder.toString();
 	}
 
 	private void print(Node node, StringBuilder stringBuilder, String indent) {

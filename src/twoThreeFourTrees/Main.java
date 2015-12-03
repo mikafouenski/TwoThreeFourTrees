@@ -19,7 +19,7 @@ public class Main {
 				tree.remove(number);
 			else
 				tree.add(number);
-			tree.display();
+			System.out.println(tree);
 			if (i < n - 1)
 				System.out.println("--------------- NEXT ---------------");
 		}
@@ -38,14 +38,14 @@ public class Main {
 				tree.remove(number);
 			else
 				tree.add(number);
-			tree.display();
+			System.out.println(tree);
 			System.out.println("--------------- NEXT ---------------");
 		}
 	}
 
 	public static void main(String[] args) {
-		Main.test();
-		// Main.run();
+		//Main.test();
+		Main.run();
 	}
 
 }
