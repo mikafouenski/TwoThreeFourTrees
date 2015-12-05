@@ -15,6 +15,17 @@ public class Node {
 		node += "]";
 		return node;
 	}
+	
+	public String exportDot() {
+		String node = this.hashCode() + " [label=\"{";
+		for (int i = 0; i < this.nbKey; i++) {
+			node += this.values[i];
+			if (i + 1 < this.nbKey)
+				node += "|";
+		}
+		node += "}\"]";
+		return node;
+	}
 
 	public Integer[] getValues() {
 		return values;

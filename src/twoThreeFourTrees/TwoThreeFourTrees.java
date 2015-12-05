@@ -1,5 +1,11 @@
 package twoThreeFourTrees;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
 public class TwoThreeFourTrees {
 	private Node root = new Node();
 
@@ -199,8 +205,6 @@ public class TwoThreeFourTrees {
 				node = node.getSons()[i];
 		}
 	}
-	
-	
 
 	@Override
 	public String toString() {
@@ -222,5 +226,65 @@ public class TwoThreeFourTrees {
 		stringBuilder.append(indent);
 		stringBuilder.append("└─");
 		this.print(node.getSons()[node.getNbKey()], stringBuilder, indent + "  ");
+	}
+
+	private void printDOTLabel(Node node, StringBuilder stringBuilder) {
+		stringBuilder.append("    " + node.exportDot());
+		stringBuilder.append("\n");
+		if (node.getSons()[0] == null)
+			return;
+		for (int i = 0; i < node.getNbKey(); ++i) {
+			this.printDOTLabel(node.getSons()[i], stringBuilder);
+		}
+		this.printDOTLabel(node.getSons()[node.getNbKey()], stringBuilder);
+	}
+
+	private void exportDot(Node node, StringBuilder builder) {
+		if (node.getSons()[0] == null) {
+			builder.append("    " + node.hashCode());
+			builder.append(";\n");
+			return;
+		}
+		for (int i = 0; i < node.getNbKey(); ++i) {
+			builder.append("    " + node.hashCode());
+			builder.append(" -> ");
+			builder.append(node.getSons()[i].hashCode());
+			builder.append(";\n");
+			if (node.getSons()[i].getSons()[0] != null)
+				this.exportDot(node.getSons()[i], builder);
+		}
+		builder.append("    " + node.hashCode());
+		builder.append(" -> ");
+		builder.append(node.getSons()[node.getNbKey()].hashCode());
+		builder.append(";\n");
+		if (node.getSons()[node.getNbKey()].getSons()[0] != null)
+			this.exportDot(node.getSons()[node.getNbKey()], builder);
+	}
+
+	public void exportInDotForGraphiviz() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("digraph {\n");
+		builder.append("    node [shape = record];\n");
+		this.printDOTLabel(this.root, builder);
+		this.exportDot(this.root, builder);
+		builder.append("}\n");
+		// File part
+		try {
+			File file = new File("graph.dot");
+			if (!file.exists())
+				file.createNewFile();
+			FileOutputStream outputStream = new FileOutputStream(file);
+			PrintStream printStream = new PrintStream(outputStream);
+			printStream.print(builder.toString());
+			printStream.close();
+			Process process = Runtime.getRuntime().exec("dot -Tjpg -ograph.jpg graph.dot");
+			process.waitFor();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

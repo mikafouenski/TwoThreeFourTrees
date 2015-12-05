@@ -23,6 +23,7 @@ public class Main {
 			if (i < n - 1)
 				System.out.println("--------------- NEXT ---------------");
 		}
+		tree.exportInDotForGraphiviz();
 	}
 
 	private static void test() {
@@ -42,10 +43,28 @@ public class Main {
 			System.out.println("--------------- NEXT ---------------");
 		}
 	}
+	
+	private static void test2() {
+		Random rand = new Random();
+		System.out.print("Please enter the number of random generation : ");
+		Scanner scanner = new Scanner(System.in);
+		int n = scanner.nextInt();
+		scanner.close();
+		TwoThreeFourTrees tree = new TwoThreeFourTrees();
+		for (int i = 1; i <= n; i++) {
+			Integer number = rand.nextInt(n);
+			boolean search = tree.search(number);
+			if (search)
+				tree.remove(number);
+			else
+				tree.add(number);
+		}
+		tree.exportInDotForGraphiviz();
+	}
 
 	public static void main(String[] args) {
-		//Main.test();
-		Main.run();
+		Main.test2();
+		//Main.run();
 	}
 
 }
