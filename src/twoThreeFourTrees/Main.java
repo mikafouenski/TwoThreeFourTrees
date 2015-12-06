@@ -23,7 +23,7 @@ public class Main {
 			if (i < n - 1)
 				System.out.println("--------------- NEXT ---------------");
 		}
-		tree.exportInDotForGraphiviz();
+		tree.exportToGraphiviz();
 	}
 
 	private static void test() {
@@ -59,12 +59,11 @@ public class Main {
 			else
 				tree.add(number);
 		}
-		tree.exportInDotForGraphiviz();
+		tree.exportToGraphiviz();
 	}
 
 	public static void main(String[] args) {
-		Main.test2();
-		//Main.run();
+		//Main.test2();
+		Main.run();
 	}
-
 }

@@ -228,18 +228,18 @@ public class TwoThreeFourTrees {
 		this.print(node.getSons()[node.getNbKey()], stringBuilder, indent + "  ");
 	}
 
-	private void printDOTLabel(Node node, StringBuilder stringBuilder) {
+	private void printDOTLabels(Node node, StringBuilder stringBuilder) {
 		stringBuilder.append("    " + node.exportDot());
 		stringBuilder.append("\n");
 		if (node.getSons()[0] == null)
 			return;
 		for (int i = 0; i < node.getNbKey(); ++i) {
-			this.printDOTLabel(node.getSons()[i], stringBuilder);
+			this.printDOTLabels(node.getSons()[i], stringBuilder);
 		}
-		this.printDOTLabel(node.getSons()[node.getNbKey()], stringBuilder);
+		this.printDOTLabels(node.getSons()[node.getNbKey()], stringBuilder);
 	}
 
-	private void exportDot(Node node, StringBuilder builder) {
+	private void exportDotLinks(Node node, StringBuilder builder) {
 		if (node.getSons()[0] == null) {
 			builder.append("    " + node.hashCode());
 			builder.append(";\n");
@@ -251,22 +251,22 @@ public class TwoThreeFourTrees {
 			builder.append(node.getSons()[i].hashCode());
 			builder.append(";\n");
 			if (node.getSons()[i].getSons()[0] != null)
-				this.exportDot(node.getSons()[i], builder);
+				this.exportDotLinks(node.getSons()[i], builder);
 		}
 		builder.append("    " + node.hashCode());
 		builder.append(" -> ");
 		builder.append(node.getSons()[node.getNbKey()].hashCode());
 		builder.append(";\n");
 		if (node.getSons()[node.getNbKey()].getSons()[0] != null)
-			this.exportDot(node.getSons()[node.getNbKey()], builder);
+			this.exportDotLinks(node.getSons()[node.getNbKey()], builder);
 	}
 
-	public void exportInDotForGraphiviz() {
+	public void exportToGraphiviz() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("digraph {\n");
 		builder.append("    node [shape = record];\n");
-		this.printDOTLabel(this.root, builder);
-		this.exportDot(this.root, builder);
+		this.printDOTLabels(this.root, builder);
+		this.exportDotLinks(this.root, builder);
 		builder.append("}\n");
 		// File part
 		try {
