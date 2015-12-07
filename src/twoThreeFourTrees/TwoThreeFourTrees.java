@@ -270,14 +270,14 @@ public class TwoThreeFourTrees {
 		builder.append("}\n");
 		// File part
 		try {
-			File file = new File("graph.dot");
+			File file = new File("tree.dot");
 			if (!file.exists())
 				file.createNewFile();
 			FileOutputStream outputStream = new FileOutputStream(file);
 			PrintStream printStream = new PrintStream(outputStream);
 			printStream.print(builder.toString());
 			printStream.close();
-			Process process = Runtime.getRuntime().exec("dot -Tjpg -ograph.jpg graph.dot");
+			Process process = Runtime.getRuntime().exec("dot -Tjpg -otree.jpg tree.dot");
 			process.waitFor();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

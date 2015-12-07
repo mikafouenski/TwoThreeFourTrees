@@ -9,7 +9,6 @@ public class Main {
 		System.out.print("Please enter the number of random generation : ");
 		Scanner scanner = new Scanner(System.in);
 		int n = scanner.nextInt();
-		scanner.close();
 		TwoThreeFourTrees tree = new TwoThreeFourTrees();
 		for (int i = 1; i <= n; i++) {
 			Integer number = rand.nextInt(n);
@@ -23,7 +22,20 @@ public class Main {
 			if (i < n - 1)
 				System.out.println("--------------- NEXT ---------------");
 		}
-		tree.exportToGraphiviz();
+		System.out.print("Did you have graphviz installed ? (y/n) :");
+		String res = scanner.next();
+		switch (res) {
+		case "y":
+			tree.exportToGraphiviz();
+			System.out.println("Tree exported at tree.jpg");
+			break;
+		default:
+			System.out.println("Arch Linux based install : pacman -S graphviz");
+			System.out.println("Debian based install : apt-get install graphviz");
+			System.out.println("Os X install: brew install graphviz");
+			break;
+		}
+		scanner.close();
 	}
 
 	private static void test() {
@@ -43,7 +55,7 @@ public class Main {
 			System.out.println("--------------- NEXT ---------------");
 		}
 	}
-	
+
 	private static void test2() {
 		Random rand = new Random();
 		System.out.print("Please enter the number of random generation : ");
@@ -63,7 +75,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		//Main.test2();
+		// Main.test2();
 		Main.run();
 	}
 }
