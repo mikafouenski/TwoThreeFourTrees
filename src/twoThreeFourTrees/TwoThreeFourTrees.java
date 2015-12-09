@@ -6,9 +6,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+/**
+ * Classe représentant un arbre 2 3 4, contient la racine.
+ */
 public class TwoThreeFourTrees {
 	private Node root = new Node();
 
+	/**
+	 * Fonction divisant un nœeud en 2 et fait remonter la valeur du milleu au
+	 * dessus.
+	 * 
+	 * @param node
+	 * @param i
+	 */
 	private void split(Node node, int i) {
 		Node newNode = new Node();
 		newNode.getValues()[0] = node.getSons()[i].getValues()[2];
@@ -18,6 +28,7 @@ public class TwoThreeFourTrees {
 		node.getSons()[i].getSons()[3] = null;
 		newNode.setNbKey(1);
 		node.getSons()[i].setNbKey(1);
+		// On pouse les valeur et les fils pour faire de la place
 		for (int j = node.getNbKey() - 1; j >= i; --j) {
 			node.getValues()[j + 1] = node.getValues()[j];
 		}
@@ -29,22 +40,29 @@ public class TwoThreeFourTrees {
 		node.setNbKey(node.getNbKey() + 1);
 	}
 
+	/**
+	 * Fonction recursive d'insertion dans un arbre234, en utilisant la methode
+	 * d'éclatement à la descente.
+	 * 
+	 * @param node
+	 * @param data
+	 * @return boolean
+	 */
 	private boolean insert(Node node, Integer data) { // eclatement a la
 														// descente
 		int i = 0;
-		while ((i < node.getNbKey()) && (data > node.getValues()[i])) {
-			i = i + 1;
-		}
+		while ((i < node.getNbKey()) && (data > node.getValues()[i]))
+			i++;
 		if ((i < node.getNbKey()) && (node.getValues()[i].equals(data)))
 			return false;
 
-		if (node.getSons()[1] != null) {
+		if (node.getSons()[0] != null) {
 			if (node.getSons()[i].getNbKey() == 3) {
 				if (node.getSons()[i].getValues()[1].equals(data))
 					return false;
 				this.split(node, i);
 				if (data > node.getValues()[i])
-					i = i + 1;
+					i++;
 			}
 			return this.insert(node.getSons()[i], data);
 		} else {
@@ -57,6 +75,12 @@ public class TwoThreeFourTrees {
 		}
 	}
 
+	/**
+	 * Fonction initiale d'ajout d'une valeur, traite la racine a part.
+	 * 
+	 * @param data
+	 * @return boolean
+	 */
 	public boolean add(Integer data) {
 		if (this.root.getNbKey() == 3) {
 			Node newRoot = new Node();
@@ -67,12 +91,23 @@ public class TwoThreeFourTrees {
 		return this.insert(this.root, data);
 	}
 
+	/**
+	 * Fontion d'ajout d'un tableau (utile pour degguger ;).
+	 * 
+	 * @param array
+	 */
 	public void add(Integer[] array) {
 		for (int i = 0; i < array.length; i++) {
 			this.add(array[i]);
 		}
 	}
 
+	/**
+	 * Fusionne les nœeud fils[i] et fils[i + 1].
+	 * 
+	 * @param node
+	 * @param i
+	 */
 	private void merge(Node node, int i) {
 		Node gauche = node.getSons()[i];
 		Node droite = node.getSons()[i + 1];
@@ -88,6 +123,13 @@ public class TwoThreeFourTrees {
 		node.setNbKey(node.getNbKey() - 1);
 	}
 
+	/**
+	 * Fait pivoter les nœeud fils[i] et fils[i - 1], plus simple que de
+	 * remonter les valeurs /!\ faire attention aux nœeud vide ! you fools !
+	 * 
+	 * @param node
+	 * @param i
+	 */
 	private void spinRight(Node node, int i) {
 		Node gauche = node.getSons()[i - 1];
 		Node droite = node.getSons()[i];
@@ -101,6 +143,12 @@ public class TwoThreeFourTrees {
 		gauche.setNbKey(gauche.getNbKey() - 1);
 	}
 
+	/**
+	 * Pareil avec fils[i] et fils[i - 1].
+	 * 
+	 * @param node
+	 * @param i
+	 */
 	private void spinLeft(Node node, int i) {
 		Node gauche = node.getSons()[i];
 		Node droite = node.getSons()[i + 1];
@@ -119,6 +167,13 @@ public class TwoThreeFourTrees {
 		droite.setNbKey(droite.getNbKey() - 1);
 	}
 
+	/**
+	 * Recherche de la valeur maximale de l'arbre, peux etre la mettre public, a
+	 * voir.
+	 * 
+	 * @param node
+	 * @return Integer
+	 */
 	private Integer getMaxValue(Node node) {
 		while (node.getSons()[0] != null) {
 			node = node.getSons()[node.getNbKey()];
@@ -126,6 +181,12 @@ public class TwoThreeFourTrees {
 		return node.getValues()[node.getNbKey() - 1];
 	}
 
+	/**
+	 * Recherche du min, Idem
+	 * 
+	 * @param node
+	 * @return Integer
+	 */
 	private Integer getMinValue(Node node) {
 		while (node.getSons()[0] != null) {
 			node = node.getSons()[0];
@@ -133,6 +194,13 @@ public class TwoThreeFourTrees {
 		return node.getValues()[0];
 	}
 
+	/**
+	 * Fonction recursive de suppresion d'un element dans l'arbre. Elle traite
+	 * tous les cas un par un... 5 niveaux de if...
+	 * 
+	 * @param node
+	 * @param data
+	 */
 	private void delete(Node node, Integer data) {
 		int i = 0;
 		while (i < node.getNbKey() && data > node.getValues()[i])
@@ -180,6 +248,12 @@ public class TwoThreeFourTrees {
 		}
 	}
 
+	/**
+	 * Fonction initiale de suppression, traite la racine a part. Pas de
+	 * boolean, inutile.
+	 * 
+	 * @param data
+	 */
 	public void remove(Integer data) {
 		this.delete(this.root, data);
 		if (this.root.getNbKey() == 0) {
@@ -189,6 +263,12 @@ public class TwoThreeFourTrees {
 		}
 	}
 
+	/**
+	 * Fonction de test si un element est dans l'arbre.
+	 * 
+	 * @param data
+	 * @return boolean
+	 */
 	public boolean search(Integer data) {
 		Node node = this.root;
 		while (true) {
@@ -206,6 +286,11 @@ public class TwoThreeFourTrees {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -213,6 +298,14 @@ public class TwoThreeFourTrees {
 		return stringBuilder.toString();
 	}
 
+	/**
+	 * Fonction recursive de construction du string console plus ou moins joli,
+	 * voir la commande tree de Linux.
+	 * 
+	 * @param node
+	 * @param stringBuilder
+	 * @param indent
+	 */
 	private void print(Node node, StringBuilder stringBuilder, String indent) {
 		stringBuilder.append(node);
 		stringBuilder.append("\n");
@@ -228,6 +321,12 @@ public class TwoThreeFourTrees {
 		this.print(node.getSons()[node.getNbKey()], stringBuilder, indent + "  ");
 	}
 
+	/**
+	 * Fonction recursive d'export des labels vers du DotFile
+	 * 
+	 * @param node
+	 * @param stringBuilder
+	 */
 	private void printDOTLabels(Node node, StringBuilder stringBuilder) {
 		stringBuilder.append("    " + node.exportDot());
 		stringBuilder.append("\n");
@@ -239,6 +338,12 @@ public class TwoThreeFourTrees {
 		this.printDOTLabels(node.getSons()[node.getNbKey()], stringBuilder);
 	}
 
+	/**
+	 * Fonction recursive d'export des liens vers du DotFile
+	 * 
+	 * @param node
+	 * @param stringBuilder
+	 */
 	private void exportDotLinks(Node node, StringBuilder builder) {
 		if (node.getSons()[0] == null) {
 			builder.append("    " + node.hashCode());
@@ -261,6 +366,13 @@ public class TwoThreeFourTrees {
 			this.exportDotLinks(node.getSons()[node.getNbKey()], builder);
 	}
 
+	/**
+	 * Fonction d'export de l'arbre vers le fichier tree.dot et execute dot
+	 * dessus.
+	 * 
+	 * @param node
+	 * @param stringBuilder
+	 */
 	public void exportToGraphiviz() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("digraph {\n");
